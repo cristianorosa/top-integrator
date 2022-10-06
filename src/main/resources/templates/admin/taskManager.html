@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="https://www.thymeleaf.org"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="~{layout/head :: head('Top Integrator')}" />
+
+<body>
+    <!-- Container -->
+    <div th:replace="layout/container :: container(~{ :: .content})">
+        <div class="content mx-4">
+
+           <!-- Variaveis -->
+           <input type="hidden" id="path" th:value="${path}">
+           <input type="hidden" id="filter" th:value="${filter}">
+            
+           <!-- Area do titulo -->
+				<div th:replace="~{comp/title :: title(title='Eventos de Execuções de Integração')}"></div>
+            
+           <!-- Feedback Messages  -->
+           <div th:replace="~{comp/feedback :: feedback}"></div>             
+          
+           <div class="container-fluid my-2">
+           <!-- Contant Area -->
+            
+               <!-- Filter -->
+               <h5 class="text-start mt-4">Filtros da Consulta</h5>
+               <div class="row pb-2 mt-4 ps-2 pe-2">
+                    <div class="form-floating col-md-3 col-xs-3 col-sm-6 pe-0 ps-0">
+                        <label for="execDate" class="form-label mt-0 pt-0">Data da Execução</label>
+                        <div class="input-group inv-data date">
+                            <input type="text" class="form-control" id="execDate" placeholder="Digite a data da execução" th:value="${execDate != 'none' ? execDate : ''}">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-white d-block">
+                                    <img src="../../static/img/icons/calandar.svg" alt="" width="18" height="18">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-floating col-md-3 col-xs-3 col-sm-6 px-1">
+                        <select name="source" id="source" class="form-select">
+                            <option th:value="'Todos'" th:text="Todos" th:selected="${source != 'NL' || source != 'MICROVIX' || source != 'PCI'}"></option>
+                            <option th:value="'1'" th:text="NL" th:selected="${source == 'NL'}"></option>                          
+                            <option th:value="'2'" th:text="MICROVIX" th:selected="${source == 'MICROVIX'}"></option>
+                            <option th:value="'3'" th:text="PCI" th:selected="${source == 'PCI'}"></option>       
+                        </select>
+                        <label for="origem" class="form-label">Sistema Origem dos Dados</label>
+                    </div>          
+                    
+                    <div class="form-floating col-md-4 col-xs-3 col-sm-6 ps-0 pe-1">
+                        <select name="cadstro" id="dataList" class="form-select">
+                            <option th:value="${cad.valor}" th:text="${cad.valor != 'none' ? cad.valor : 'Todos'}" th:each="cad : ${dataLists}" th:selected="${cad.valor == dataList}"></option>                                   
+                        </select>
+                        <label for="cadastro" class="form-label">Tipo de Cadastro</label>
+                    </div>    
+                    
+                    <!--  Actions -->
+                   <div class="col-md-1 actions col-sm-6 col-xs-3 ps-0 pe-1">
+                           <button type="button" class="btn btn-secondary" id="reset" onClick="reset()">Limpar</button>
+                   </div>
+                   <div class="col-md-1 actions col-sm-6 col-xs-3 ps-0 pe-1">
+                           <button type="button" class="btn btn-primary" id="find">Buscar</button>
+                   </div>          
+                </div>
+             
+               <!-- Grid -->  
+               <table border="1" class="table mt-3 table-bordered table-striped table-responsive-md table-hover table-sm">
+	        		<thead>
+	        			<tr>
+	        				<th class="text-center">Código</th>
+	        				<th>Descrição</th>
+	        				<th class="text-center">Data Inicio</th>
+	        				<th class="text-center ps-1">Hora</th>
+	        				<th class="text-center ps-1">Minuto</th>
+	        				<th>Origem</th>
+	        				<th>Destino</th>
+	        				<th>Cadastro</th>
+	        				<th class="text-center ps-1">Páginas</th>
+	        				<th class="text-center ps-1" colspan="2">Log</th>
+	        			</tr>
+	        		</thead>
+	        		<tbody>
+						<tr th:each="task : ${listTasks}">
+							<td class="text-center" th:text="${task.id}"></td>	
+							<td th:text="${task.nome}"></td>
+							<td class="text-center" th:text="${task.dtaInicioFmt}"></td>
+							<td class="text-center" th:text="${task.hora}"></td>
+							<td class="text-center" th:text="${task.minuto}"></td>
+							<td th:text="${task.origemFmt}"></td>
+							<td th:text="${task.destinoFmt}"></td>
+							<td th:text="${task.cadastro}"></td>
+							<td class="text-center" th:text="${task.qtdPaginas}"></td>
+							<td class="text-center">
+								<a class="text-dark" th:href="@{/admin/tasklog?execId={id}(id=${task.id})}" data-bs-toggle="tooltip" data-bs-placement="left" title="Log de Atividades">
+							    	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
+                                        <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+                                        <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+                                    </svg>
+								</a>
+	        				</td>
+						</tr>        		
+	        		</tbody>
+	        	</table>
+            
+               <!-- Navegator -->
+               <div th:replace="~{comp/navigator :: navigator}"></div>
+                
+               <!-- Actions / Progress Status -->
+               <div class="row me-auto mb-3 pb-5">
+                   <div class="btn-toolbar mb-2 mb-md-0 col-5">
+                       <button type="button" class="btn btn-secondary me-1" id="clearLog">Limpar Log</button>				          	
+				   </div>
+               </div>
+               
+           <!-- Contant Area - End -->    
+           </div>
+        </div>
+    </div>
+    
+    <th:block th:include="layout/script :: script"></th:block>
+</body>
+<script>
+    $( document ).ready(function() {
+    	
+        var codProduct = $("#codProduct").val();
+        var commercialArea = $("#commercialArea option:selected").val();
+        var action = $("#action").val();
+
+        // Lock the find form
+       lockFind(codProduct, commercialArea); 
+        
+    	// Activate datapicker with defalt language
+		getDatepicker('.inv-data.date'); 
+        
+        // Find
+        $("#find").click(function (event) {
+            event.preventDefault();
+            
+            let execDate  = $('#execDate').val();
+            let source = $('#source :selected').text();
+            let dataList = $('#dataList :selected').text();
+            window.location.assign("/admin/taskmanager?execDate="+execDate+"&source="+source+"&dataList="+dataList); 
+        });  
+    }); 
+    
+    function lockFind(codProduct, commercialArea) {
+    	commercialArea = commercialArea == "none" ? "" : commercialArea;            
+        if (codProduct || commercialArea) {
+            $("#codProduct").attr("disabled", true);
+            $("#commercialArea").attr("disabled", true);
+            $("#find").attr("disabled", true);
+        }
+    }
+    
+    function resetFind() {
+        if (codProduct || commercialArea) {     
+            $("#reset").attr("disabled", false);
+        } else {
+            $("#reset").attr("disabled", false);
+            $("#find").attr("disabled", false);
+        }
+        
+        $("#processar").attr("disabled", false);
+    }
+</script>
+</html>

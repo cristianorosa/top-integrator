@@ -1,0 +1,47 @@
+{"properties": [
+  {
+    "name": "microvix.key.client",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.key.client'"
+  },
+  {
+    "name": "microvix.id.portal",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.id.portal'"
+  },
+  {
+    "name": "microvix.cnpj.emp.default",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.cnpj.emp.default'"
+  },
+  {
+    "name": "microvix.key.exp.client",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.key.exp.client'"
+  },
+  {
+    "name": "spring.datasource.driver.class",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.driver.class'"
+  },
+  {
+    "name": "microvix.cnpj.emp.default",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.cnpj.emp.default'"
+  },
+  {
+    "name": "microvix.id.portal",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.id.portal'"
+  },
+  {
+    "name": "microvix.key.client",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.key.client'"
+  },
+  {
+    "name": "microvix.key.exp.client",
+    "type": "java.lang.String",
+    "description": "A description for 'microvix.key.exp.client'"
+  }
+]}

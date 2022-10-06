@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="~{layout/head :: head('Top Integrator')}" />
+
+<body>
+    <svg style="display: none;">
+      <symbol id="invoice_svg" viewBox="0 0 16 16">
+        <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+        <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+      </symbol>
+    </svg>
+    
+    <!-- Container -->
+    <div th:replace="layout/container :: container(~{ :: .content})">
+        <div class="content mx-4">
+        <!-- Contant Area -->
+        
+                <!-- Variaveis -->
+                <input type="hidden" id="path" th:value="${path}">
+                <input type="hidden" id="filter" th:value="${filter}">
+                <input type="hidden" id="id" th:value="${id}">
+                <input type="hidden" id="codUnidade" th:value="${codUnidade}">
+                
+                <!-- Area do titulo -->
+                <div th:replace="~{comp/title :: title(title='Notas Fiscal no Microvix')}"></div>
+                
+                <!-- Area das mensagens -->
+                <div th:replace="~{comp/feedback :: feedback}"></div>      
+                
+                <!-- Mensagem -->
+                <div th:replace="~{comp/message :: message(title='Aviso', text='Funcionalidade em implementação!!!', textButton='Ok' )}"></div>    
+                
+                <!-- Loader -->
+                <div th:replace="~{comp/loader :: loader(title='Aguarde')}"></div>         
+              
+                <!-- Area de conteudo -->
+                <div class="container-fluid my-2">
+                
+                    <div class="btn-toolbar mb-2 justify-content-end" style="position: absolute; right: 45px; margin-top: -1rem;">
+                        <a href="javascript: history.go(-1)"><button type="button" class="btn btn-primary" id="voltar">Voltar</button></a>  
+                    </div>
+              
+                    <h5 class="text-start mt-4" >Destinatário/Remetente</h5>
+                    <div class="row py-1">
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                         <input type="text" class="form-control" id="codProduct" disabled="disabled" th:value="${nota.cliente.codCliente}">
+                         <label for="codProduct" class="form-label">Código N&amp;L</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-6 col-xs-3 col-sm-6 px-1">
+                         <input type="text" class="form-control" id="nome" disabled="disabled" th:value="${nota.cliente.nomeCliente}">
+                         <label for="nome" class="form-label">Nome:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-4 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="cpfcnpj" disabled="disabled" th:value="${nota.cliente.docCliente}">
+                            <label for="cpfcnpj" class="form-label">CPF/CNPJ:</label>
+                       </div>
+                    </div>
+                    
+                    <div class="row py-1">
+                       <div class="form-floating col-md-6col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="logradouro" disabled="disabled" th:value="${nota.cliente.enderecoCliente}">
+                            <label for="logradouro" class="form-label">Logradouro:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="numero" disabled="disabled" th:value="${nota.cliente.numeroRuaCliente}">
+                            <label for="numero" class="form-label">Número:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-4 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="bairro" disabled="disabled" th:value="${nota.cliente.bairroCliente}">
+                            <label for="bairro" class="form-label">Bairro:</label>
+                       </div>
+                    </div>
+                    
+                    <h5 class="text-start mt-3">Dados Complementares</h5>
+                    <div class="row py-1">
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="numero" disabled="disabled" th:value="${nota.numero}">
+                            <label for="numero" class="form-label">Nota Fiscal:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="serie" disabled="disabled" th:value="${nota.serie}">
+                            <label for="serie" class="form-label">Série:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="operacao" disabled="disabled" th:value="${nota.operacaoFmt}">
+                            <label for="operacao" class="form-label">Tipo Operação:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-4 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="naturezaOperacao" disabled="disabled" th:value="${nota.naturezaOperacao}">
+                            <label for="naturezaOperacao" class="form-label">Natureza:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="dtemisao" disabled="disabled" th:value="${nota.dataEmissaoFmt}">
+                            <label for="dtemisao" class="form-label">Data de Emissão:</label>
+                       </div>
+                    </div>
+                    
+                    <div class="row py-1">
+                        <div class="form-floating col-md-4 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="vendedor" disabled="disabled" th:value="${nota.vendedor.toString}">
+                            <label for="vendedor" class="form-label">Vendedor:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-4 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="formaPgto" disabled="disabled" th:value="${pagto}">
+                            <label for="formaPgto" class="form-label">Pagamento:</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-4 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control" id="chavenfe" disabled="disabled" th:value="${nota.chaveNf}">
+                            <label for="chavenfe" class="form-label">Chave:</label>
+                       </div>
+                    </div>
+                    
+                    <h5 class="text-start mt-3">Produtos</h5>
+                    <div class="row px-2">
+                        <table border="1" class="table col-12 table-bordered table-striped table-responsive-md table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Código</th>
+                                    <th class="text-center">Descrição</th>
+                                    <th class="text-center">CST</th>
+                                    <th class="text-center">CFOP</th>
+                                    
+                                    <th class="text-center">Quatidade</th>
+                                    <th class="text-end">Valor Unit.</th>
+                                    <th class="text-end">Valor Total</th>
+                                    
+                                    <th class="text-center">ICMS %</th>
+                                    <th class="text-center">IPI %</th>
+                                    <th class="text-center">V.IPI</th>
+                                    <th class="text-center">V.ST</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="item : ${nota.items}">
+                                    <td class="text-center" th:text="${item.codProduto}"></td>  
+                                    <td th:text="${item.descricao}"></td>
+                                    <td class="text-center" th:text="${item.cst}"></td>
+                                    <td class="text-center" th:text="${item.cfop}"></td>
+                                    
+                                    <td class="text-center" th:text="${item.quantidade}"></td>
+                                    <td class="text-end" th:text="${item.precoUnitarioFmt}"></td>
+                                    <td class="text-end" th:text="${item.valorTotalFmt}"></td>
+                                    
+                                    <td class="text-center" th:text="${item.icmsPercentFmt}"></td>
+                                    <td class="text-center" th:text="${item.ipiPercentFmt}"></td>
+                                    <td class="text-center" th:text="${item.valorIpiFmt}"></td>
+                                    <td class="text-center" th:text="${item.valorStFmt}"></td>
+                                </tr> 
+                            </tbody>
+                        </table>
+                    </div>    
+                    
+                    <h5 class="text-start mt-2 ajsute-h5">Totais da Nota</h5>
+                    <div class="row py-1">
+                        <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="piscofins" disabled="disabled" th:value="${pisCofins}">
+                            <label for="piscofins" class="form-label">PIS/COFINS</label>  
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="baseicms" disabled="disabled" th:value="${bcIcms}">
+                            <label for="baseicms" class="form-label">Base Cálc. ICMS</label> 
+                       </div>
+                    
+                        <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="valoricms" disabled="disabled" th:value="${vIcms}">
+                            <label for="valoricms" class="form-label">Valor do ICMS</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="baseicmsst" disabled="disabled" th:value="${bcIcmsSt}">
+                            <label for="baseicmsst" class="form-label">Base ICMS-ST</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="valoricmsst" disabled="disabled" th:value="${vIcmsSt}">
+                            <label for="valoricmsst" class="form-label">Valor ICMS-ST</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="valortotprod" disabled="disabled" th:value="${vTotProdutos}">
+                            <label for="valortotprod" class="form-label">V. Total Produtos</label>
+                       </div>
+                    </div>
+                    
+                    <div class="row py-1">
+                        <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="frete" disabled="disabled" th:value="${vFrete}">
+                            <label for="frete" class="form-label">Valor do Frete</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="seguro" disabled="disabled" th:value="${vSeguro}">
+                            <label for="seguro" class="form-label">Valor do Seguro</label>
+                       </div>
+                    
+                        <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="outras" disabled="disabled" th:value="${vOutras}">
+                            <label for="outras" class="form-label">Outras Despesas</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="ipi" disabled="disabled" th:value="${vTotIpi}">
+                            <label for="ipi" class="form-label">Valor Total do IPI</label>
+                       </div>
+                       
+                       <div class="form-floating col-md-4 col-xs-3 col-sm-6 px-1">
+                            <input type="text" class="form-control text-end" id="totnota" disabled="disabled" th:value="${vTotNota}">
+                            <label for="totnota" class="form-label">V.Total da Nota</label>
+                       </div>
+                      
+                    </div>
+                    
+                    <div class="row py-1">
+                        <div class="form-floating col-md-12 col-xs-3 col-sm-6 px-1">
+                            <textarea class="form-control" style="padding-top: 1rem !important; height: 5rem !important;" id="chavenfe" disabled="disabled">[[${nota.observacoes}]]</textarea>
+                            <label for="chavenfe" class="form-label">Observações</label>
+                       </div>
+                    </div>
+                    
+                    <!-- Ações / Status Processamento -->
+                    <div class="row mt-2">
+                        <div class="btn-toolbar mb-2 col-5">
+                            <a th:href="${microvix_url}" target="_blank" class="pe-2">
+                                <button type="button" class="btn btn-secondary" id="Nota_microvix">Nota no Microvix</button>
+                            </a>
+                            <button type="button" class="btn btn-primary me-1" id="xml-incoice" data-bs-toggle="modal" data-bs-target="#xmlinvoice" >XML da Nota</button>
+                            <button type="button" class="btn btn-primary me-1" id="processar" data-bs-toggle="modal" data-bs-target="#loader" >Atualizar N&amp;L Gestão</button>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-2 mb-5">
+                        <h5 class="col-12 small">Obs.: Para usar "Nota no Microvix" é necessário estar logado no Microvix em outra guia do navegador.</h5>
+                    </div>
+                    
+                    <!-- Modal -->
+					<div class="modal fade" id="xmlinvoice" tabindex="-1" aria-hidden="true">
+					  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title">XML da Nota enviado a SEFAZ</h5>
+					        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					      </div>
+					      <div class="modal-body">
+					       <textarea class="border-0" th:text="${nota.xml}" rows="30" cols="200"></textarea>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>			        
+					      </div>
+					    </div>
+					  </div>
+					</div>
+                    
+                </div>
+               
+        <!-- Contant Area - End -->    
+        </div>
+    </div>
+    
+    <th:block th:include="layout/script :: script"></th:block>
+</body>
+<script>	
+	var myLoadaer;
+	var timer;
+	
+    $( document ).ready(function() {
+    	var id = $("#id").val();	
+    	var codUnidade = $("#codUnidade").val();	
+    	
+    	myLoader = new bootstrap.Modal(document.getElementById('loader'));
+    	
+        // Processa todos os dados dos itens
+     	$("#processar").click(function (event) {
+     		event.preventDefault();	 
+     		myLoader.show();
+     		
+     		$.get("/invoice/microvix?action=import_invoice&id="+id+"&businessUnit="+codUnidade);
+    	
+     		timer = setInterval("getStatus()", 2000);
+     	});   
+    });
+
+    function getStatus() {
+    	var url = $("#path").val();
+    	$.get("/"+url+"/status", function(res) {
+    		var status = res.split(":")[2];	
+    		var msg = res.split(":")[0];	
+    			
+    		if (status == "FINISHED") {
+    			clearInterval(timer);	
+    			
+    			setTimeout(function(){
+    				feedback("Parabens! Processamento concluído com sucesso.", 'success');	
+    				myLoader.hide();	
+    			},1000);					
+        	}
+    		
+    		if (status == "ERROR") {
+    			clearInterval(timer);	
+    			
+    			setTimeout(function(){
+    				feedback(msg, 'danger');	
+    				myLoader.hide();	
+    			},1000);					
+        	}	
+    			
+    	});
+    }
+</script>	   
+</html>

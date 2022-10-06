@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="https://www.thymeleaf.org"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="~{layout/head :: head('Top Integrator')}" />
+
+<body>
+    <!-- Container -->
+    <div th:replace="layout/container :: container(~{ :: .content})">
+        <div class="content mx-4">
+
+           <!-- Variaveis -->
+           <input type="hidden" id="path" th:value="${path}">
+           <input type="hidden" id="filter" th:value="${filter}">
+            
+           <!-- Title -->
+           <div th:replace="~{comp/title :: title(title='Integrator - Sistema de Integração')}"></div>
+            
+           <!-- Feedback Messages  -->
+           <div th:replace="~{comp/feedback :: feedback}"></div>             
+          
+           <div class="container-fluid my-2">
+           <!-- Contant Area -->
+            
+               
+               
+           <!-- Contant Area - End -->    
+           </div>
+        </div>
+    </div>
+    
+    <th:block th:include="layout/script :: script"></th:block>
+</body>
+</html>

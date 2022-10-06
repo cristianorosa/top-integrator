@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="https://www.thymeleaf.org"
+    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    
+    <!-- Modal -->
+    <div th:fragment="confirmation(texto)" class="modal fade" id="confirmation" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirma&ccedil;&atilde;o</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body confirmation-body">
+          	  [(${texto})] 	
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="dlg_confirm_btn">Corfirmar</button>			        
+          </div>
+        </div>
+      </div>
+    </div>
+
+</html>

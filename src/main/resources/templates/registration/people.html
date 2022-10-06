@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="~{layout/head :: head('Top Integrator')}" />
+
+<body>
+    <!-- Container -->
+    <div th:replace="layout/container :: container(~{ :: .content})">
+        <div class="content mx-4">
+
+           <!-- Variaveis -->
+           <input type="hidden" id="path" th:value="${path}">
+           <input type="hidden" id="filter" th:value="${filter}">
+           <input type="hidden" id="msg" th:value="${msg}">
+            
+           <!-- Title -->
+           <div th:replace="~{comp/title :: title(title='Integração de Pessoas - Clientes e Fornecedores')}"></div>
+            
+           <!-- Feedback Messages  -->
+           <div th:replace="~{comp/feedback :: feedback}"></div>             
+          
+           <div class="container-fluid my-2">
+           <!-- Contant Area -->
+            
+                <!-- Filter -->
+                <h5 class="text-start mt-4">Filtros da Consulta</h5>
+                <div class="row pb-2 mt-4 ps-2 pe-2">
+                    <div class="form-floating col-md-2 col-xs-3 col-sm-6 px-1">
+                        <input type="text" class="form-control" id="id" placeholder="Digite o código N&amp;L" th:value="${id != 'none' ? id : ''}">
+                        <label for="id" class="form-label">Código N&amp;L</label> 
+                    </div> 
+               
+                    <div class="form-floating col-md-5 col-xs-3 col-sm-6 px-1  ps-0">
+                        <input type="text" class="form-control" id="name" placeholder="Digite o nome da pessoa" th:value="${name !='none' ? name : ''}">
+                        <label for="name" class="form-label">Nome da Pessoa</label>
+                    </div>
+                    
+                    <div class="form-floating col-md-1 col-xs-3 col-sm-6 pe-1 ps-0">
+                       <select name="type" id="type" class="form-select">
+					      <option th:value="'none'" th:text="Todos" th:selected="${type != 'F' || type != 'J'}"></option>
+						  <option th:value="'F'" th:text="Física" th:selected="${type == 'F'}"></option>						  
+						  <option th:value="'J'" th:text="Jurídica" th:selected="${type == 'J'}"></option>	
+					  </select>
+                      <label for="type" class="form-label">Tipo</label>
+                   </div>  
+               
+                   <div class="form-floating col-md-2 col-xs-3 col-sm-6 pe-1 ps-0">
+                       <select name="relationship" id="relationship" class="form-select">		
+					  	  <option th:value="'Fornecedor'" th:text="Fornecedor" th:selected="${relationship == 'Fornecedor'}"></option>				     
+						  <option th:value="'Cliente'" th:text="Cliente" th:selected="${relationship == 'Cliente'}"></option>						  
+					  </select>
+                      <label for="relationship" class="form-label">Relacionamento</label>
+                   </div>  
+               
+                   <!-- Actions -->
+                   <div class="col-md-1 actions col-sm-6 col-xs-3 ps-0 pe-1">
+                           <button type="button" class="btn btn-secondary" id="reset" onClick="reset()">Limpar</button>
+                   </div>
+                   <div class="col-md-1 actions col-sm-6 col-xs-3 ps-0 pe-1">
+                           <button type="button" class="btn btn-primary" id="find">Buscar</button>
+                   </div>
+               </div>
+             
+               <!-- Grid -->  
+               <table border="1" class="table mt-3 table-bordered table-striped table-responsive-md table-hover table-sm">
+            		<thead>
+            			<tr>
+            				<th>Código</th>
+            				<th>Nome</th>
+            				<th>CPF / CNPJ</th>
+            				<th class="text-center">Tipo</th>
+            				<th>Cidade</th>
+            				<th class="text-center">Estado</th>
+            			</tr>
+            		</thead>
+            		<tbody>
+    					<tr th:each="people : ${listPeople}">
+    						<td th:text="${people.codigo}"></td>	
+    						<td th:text="${people.nomeRazaoSocial}"></td>
+    						<td th:text="${people.docCliente}"></td>
+    						<td class="text-center" th:text="${people.pfPj}"></td>
+    						<td th:text="${people.cidade}"></td>												
+    						<td class="text-center" th:text="${people.uf}"></td>
+    					</tr>        		
+            		</tbody>
+               </table>
+            
+               <!-- Navegator -->
+               <div th:replace="~{comp/navigator :: navigator}"></div>
+                
+               <!-- Actions / Progress Status -->
+               <div class="row me-auto mb-3 pb-5">
+                   <div class="btn-toolbar col-2">
+                        <button type="button" class="btn btn-primary me-1 w-100" id="startProcess">Atualizar Microvix</button>
+                   </div>
+                   <div class="btn-toolbar mb-2 mb-md-0 col-2 form-floating ps-0">
+						<select name="acoes" id="acoes" class="form-select inv-select">								
+							<option value="todos" th:selected="${true}">Todos os Dados</option>
+							<option value="cpfpj">CPF / CNPJ</option>
+				  		</select>
+                        <label for="acoes" class="form-label inv-label">Dados</label>
+                    </div>    
+					
+					<span id="status" class="col-1 mt-2 text-end">Progresso:</span>
+					<div class="progress border float-end col-7 mt-1">
+						<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+               </div>
+               
+           <!-- Contant Area - End -->    
+           </div>
+        </div>
+    </div>
+    
+    <th:block th:include="layout/script :: script"></th:block>
+</body>
+<script>
+    $( document ).ready(function() {
+    	
+        let productId = $("#productId").val();
+        let department = $("#department option:selected").val();
+        let brand = $("#brand").val();
+
+        // Bloquear formumario, porque ja tem uma consulta com filtros em andamento
+       lockFind(productId, department, brand); 
+        
+        // Find
+        $("#find").click(function (event) {
+            event.preventDefault();
+            productId = $("#productId").val();
+            brand = $("#brand").val();
+            department = $("#department").val() == 0 ? "none" : $("#department").val();
+            
+            window.location.assign("/exp/product?productId="+productId+"&department="+department+"&brand="+brand); 
+        });  
+        
+        // Processa todos os dados dos itens
+        $("#startProcess").click(function (event) {    
+        	event.preventDefault();
+    		let action = $("#actions option:selected").val();
+    		lockAction();
+            $.get("/exp/product?pag=1&action="+action+"&productId="+productId+"&department="+department+"&brand="+brand); 
+            		
+            startStatusMonitor(resetAction);
+        });   
+    }); 
+    
+    function lockFind(productId, department, brand) {
+    	department = department == "none" ? "" : department;            
+        if (productId || department || brand) {
+        	$("#brand").attr("disabled", true);
+            $("#productId").attr("disabled", true);
+            $("#department").attr("disabled", true);
+            $("#find").attr("disabled", true);
+        }
+    }
+    
+    function resetFind() {
+        if (productId || department) {     
+            $("#reset").attr("disabled", false);
+        } else {
+            $("#reset").attr("disabled", false);
+            $("#find").attr("disabled", false);
+        }
+        
+        $("#startProcess").attr("disabled", false);
+    }
+    
+    function lockAction() {
+    	$("#action").attr("disabled", true);	  
+    	$("#startProcess").attr("disabled", true);	 
+    	
+    	$("#find").attr("disabled", true);
+    	$("#reset").attr("disabled", true);
+    	
+    	$(".page-item.disabled").addClass("inv-disabled");
+    	$(".page-item").addClass("disabled");	
+    }
+
+    function resetAction() {
+    	$("#action").attr("disabled", false);	  
+    	
+    	if (productId || department || brand) {	
+    		$("#reset").attr("disabled", false);
+    	} else {
+    		$("#reset").attr("disabled", false);
+    		$("#find").attr("disabled", false);
+    	}
+    	
+    	$("#startProcess").attr("disabled", false); 
+    	$(".page-item").removeClass("disabled");	
+    	$(".page-item.inv-disabled").removeClass(".inv-disabled").addClass("disabled");
+    }
+</script>
+</html>

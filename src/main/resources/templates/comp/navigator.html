@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org">
+
+    <div th:fragment="navigator"> 
+    
+        <input type="hidden" id="totalPages" th:value="${totalPages}">
+        
+    	<div class="float-start">
+    		<strong>Total de Registros:</strong> [[${totalItems}]] <strong>P&aacute;gina:</strong> [[${currentPage}]] de [[${totalPages}]]
+    	</div>
+    	
+    	<nav aria-label="...">
+    		<ul class="pagination justify-content-end">
+    			<li th:if="${currentPage == 1}" class="page-item disabled">
+    				<a class="page-link" tabindex="-1" aria-disabled="true">Anterior</a>
+    			</li>
+    	
+    			<li th:if="${currentPage > 1}" class="page-item">
+    				<a class="page-link btn btn-anterior rounded-0" tabindex="-1" aria-disabled="true">Anterior</a>
+    			</li>
+    	
+    			<th:block th:if="${currentPage > 5}">
+    	
+    				<li class="page-item"><a class="page-link btn rounded-0 btn-first">[[${currentPage-5}]]</a></li>
+    				<li class="page-item"><a class="page-link btn rounded-0">[[${currentPage-4}]]</a></li>
+    				<li class="page-item"><a class="page-link btn rounded-0">[[${currentPage-3}]]</a></li>
+    				<li class="page-item"><a class="page-link btn rounded-0">[[${currentPage-2}]]</a></li>
+    				<li class="page-item"><a class="page-link btn rounded-0">[[${currentPage-1}]]</a></li>
+    				<li class="page-item active"><a class="page-link btn rounded-0 btn-last">[[${currentPage}]]</a></li>
+    	
+    			</th:block>
+    	
+    			<th:block th:unless="${currentPage > 5}">
+    	
+    				<li th:if="${currentPage == 1}" class="page-item active" id="btnpage1"><a class="page-link btn-nav">1</a></li>
+    				<li th:unless="${currentPage == 1}" class="page-item" id="btnpage1"><a class="page-link btn-nav">1</a></li>
+    	
+    				<li th:if="${currentPage == 2}" class="page-item active"><a class="page-link btn-nav">2</a></li>
+    				<li th:unless="${currentPage == 2}" class="page-item"><a class="page-link btn-nav">2</a></li>
+    	
+    				<li th:if="${currentPage == 3}" class="page-item active"><a class="page-link btn-nav">3</a></li>
+    				<li th:unless="${currentPage == 3}" class="page-item"><a class="page-link btn-nav">3</a></li>
+    	
+    				<li th:if="${currentPage == 4}" class="page-item active"><a class="page-link btn-nav">4</a></li>
+    				<li th:unless="${currentPage == 4}" class="page-item"><a class="page-link btn-nav">4</a></li>
+    	
+    				<li th:if="${currentPage == 5}" class="page-item active"><a class="page-link btn-nav btn-last">5</a></li>
+    				<li th:unless="${currentPage == 5}" class="page-item"><a class="page-link btn-nav btn-last">5</a></li>
+    	
+    			</th:block>
+    	
+    			<li class="page-item">
+    				<a class="page-link btn-proximo" th:href="@{'/'+${path}+'?page='+${currentPage+1}}">Pr&oacute;xima</a>
+    			</li>
+    		</ul>
+    	</nav>
+    </div>
+</html>

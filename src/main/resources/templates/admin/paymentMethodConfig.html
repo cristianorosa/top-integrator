@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="https://www.thymeleaf.org"
+	  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="~{layout/head :: head('Top Integrator')}" />
+
+<body>
+    <!-- Container -->
+    <div th:replace="layout/container :: container(~{ :: .content})">
+        <div class="content mx-4">
+
+           <!-- Variaveis -->
+           <input type="hidden" id="path" th:value="${path}">
+           <input type="hidden" id="filter" th:value="${filter}">
+            
+           <!-- Area do titulo -->
+		   <div th:replace="~{comp/title :: title(title='Configurações dos Meios de Pagamento')}"></div>
+            
+           <!-- Feedback Messages  -->
+           <div th:replace="~{comp/feedback :: feedback}"></div>             
+          
+           <div class="container-fluid my-2">
+           <!-- Contant Area -->
+           
+                <div class="row pb-2 mt-4 ps-2 pe-2">
+                            
+                    <div class="col-md-10 pe-1 ps-1"></div>
+                    
+                    <div class="col-md-2 pe-0 ps-0">
+                      <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#edit-form" id="add_new_btn">Nova Configuração</button>
+                    </div>
+                
+                </div>
+               
+             
+               <!-- Grid -->  
+               <table border="1" class="table mt-3 table-bordered table-striped table-responsive-md table-hover table-sm">
+	        		<thead>
+	        			<tr>
+                            <th class="text-center">Sistema</th>
+                            <th class="text-center">Código</th>
+	        				<th class="text-center">Condição de Pagto</th>
+	        				<th>Descrição da Condição de Pgto</th>
+	        				<th>Descrição Lançamento</th>
+                            <th class="text-center">Pessoa do Título</th>
+	        				<th class="text-center">À Vista</th>
+                            <th class="text-center">Tipo de Título</th>
+                            <th class="text-center ps-1" colspan="2">Ações</th>
+	        			</tr>
+	        		</thead>
+	        		<tbody>
+						<tr th:each="paymentConfig : ${listPaymentConfig}">
+                            <td class="text-center" th:text="${paymentConfig.sistema}"></td>
+                            <td class="text-center" th:text="${paymentConfig.codigo}"></td>
+							<td class="text-center" th:text="${paymentConfig.codCondPgto}"></td>
+							<td th:text="${paymentConfig.desCondPgto}"></td>
+							<td th:text="${paymentConfig.desLancamento}"></td>
+                            <td class="text-center" th:text="${paymentConfig.codPessoa}"></td>
+							<td class="text-center" th:text="${paymentConfig.indAvista}"></td>
+							<td class="text-center" th:text="${paymentConfig.tipTitulo}"></td>
+                            <td class="text-center">
+                                <a id="post_data" class="text-dark text-decoration-none" th:href="@{/admin/payment_method_config/find/{id}(id=${paymentConfig.id})}" data-bs-toggle="modal" data-bs-target="#edit-form" title="Alterar Registro">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tools" viewBox="0 0 16 16">
+                                      <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0Zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708ZM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11Z"/>
+                                    </svg>
+                                </a>   
+                                <a class="text-dark text-decoration-none delete_data" th:href="@{/admin/payment_method_config/delete/{id}(id=${paymentConfig.id})}" data-bs-toggle="modal" data-bs-target="#confirmation" title="Excluir Registro">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                    </svg>
+                                </a>
+                            </td>
+						</tr>        		
+	        		</tbody>
+	           </table>
+            
+               <!-- Navegator -->
+               <div th:replace="~{comp/navigator :: navigator}"></div>
+               
+               <!--  Modal Registration Form -->
+                <div class="modal fade" id="edit-form" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title edit-form-title"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        
+                        <form class="payMethodForm">
+                        
+                            <div class="row pb-2 mt-3 ps-2 pe-2">
+                            
+                                <div class="form-floating col-md-2 pe-0 ps-0">
+                                  <input type="text" class="form-control" id="id" disabled="disabled">
+                                  <label for="id" class="form-label">Id</label>
+                                </div>
+                                
+                                <div class="form-floating col-md-5 pe-1 ps-1">
+                                  <input type="text" class="form-control" id="sistema">
+                                  <label for="sistema" class="form-label">Sistema</label>
+                                </div>
+                                
+                                <div class="form-floating col-md-5 pe-0 ps-0">
+                                  <input type="text" class="form-control" id="codigo">
+                                  <label for="codigo" class="form-label">Código</label>
+                                </div>
+                            
+                            </div>
+                            
+                            <div class="row pb-2 mt-2 ps-2 pe-2">
+                            
+                                <div class="form-floating col-md-4 pe-0 ps-0">
+                                  <input type="text" class="form-control" id="codCondPgto">
+                                  <label for="codCondPgto" class="form-label">Condição de Pagamento</label>
+                                </div>
+                                
+                                <div class="form-floating col-md-8 pe-1 ps-1">
+                                  <input type="text" class="form-control" id="desCondPgto">
+                                  <label for="desCondPgto" class="form-label">Descrição Condição de Pagamento</label>
+                                </div>
+                            
+                            </div>
+                            
+                            <div class="row pb-2 mt-2 ps-2 pe-2">
+                            
+                                <div class="form-floating col-md-2 pe-0 ps-0">
+                                  <input type="text" class="form-control" id="people">
+                                  <label for="people" class="form-label">Pessoa do Título</label>
+                                </div>
+                                
+                                <div class="form-floating col-md-6 pe-1 ps-1">
+                                  <input type="text" class="form-control" id="desLancamento">
+                                  <label for="desLancamento" class="form-label">Descrição Lançamento</label>
+                                </div>
+                                
+                                <div class="form-floating col-md-2 pe-1 ps-0">
+                                  <input type="text" class="form-control" id="indAvista">
+                                  <label for="indAvista" class="form-label">À Vista</label>
+                                </div>
+                                
+                                <div class="form-floating col-md-2 pe-0 ps-0">
+                                  <input type="text" class="form-control" id="tpTitulo">
+                                  <label for="tpTitulo" class="form-label">Tipo de Título</label>
+                                </div>
+                            
+                            </div>
+                        </form>
+                      </div>
+                      
+                      
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="dlg_confirm_update_btn">Corfirmar</button>			        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               <!--  End Modal Registration Form --> 
+                
+           <!-- End Contant Area -->    
+           </div>
+        </div>
+    </div>
+    
+    <th:block th:include="layout/script :: script"></th:block>
+</body>
+<script>
+    $( document ).ready(function() {
+    	
+    	let path = $('#path').val();
+    	let href_delete;
+    	let isUpdate;
+    	
+    	$(".delete_data").click(function (event) {
+    		href_delete = event.currentTarget.href;
+    		event.preventDefault();	 	
+    	});
+    	
+    	$("#dlg_confirm_btn").click(function (event) {
+	        jQuery.post(href_delete).done(function (data) {
+	        	feedback("O Registro foi excluido com sucesso!", 'success', proceed);
+	        });
+	        
+        });	
+    
+    	function proceed() {
+        	window.location.assign("/admin/payment_method_config");
+        };
+    	
+    	$('#edit-form').on('shown.bs.modal', function (obj_link) {
+    		let href = obj_link.relatedTarget.href;
+    		isUpdate = obj_link.relatedTarget.id != "add_new_btn";
+    		
+    		if (isUpdate) {
+    			
+    			$('.edit-form-title').html('Editar Configuração dos Meios de Pagamento');
+    			
+        		jQuery.get(href).done(function (data) {
+        			$('#id').val(data.id);
+        			$('#sistema').val(data.sistema);
+        			$('#codigo').val(data.codigo);
+        			
+        			$('#codCondPgto').val(data.codCondPgto);
+        			$('#desCondPgto').val(data.desCondPgto);
+        			$('#desLancamento').val(data.desLancamento);
+        			
+        			$('#people').val(data.codPessoa);
+        			$('#indAvista').val(data.indAvista);
+        			$('#tpTitulo').val(data.tipTitulo);
+        			
+        		});	
+    		} else {
+    			$('.edit-form-title').html('Nova Configuração dos Meios de Pagamento');
+    			
+    			$('#id').val("");
+    			$('#sistema').val("");
+    			$('#codigo').val("");
+    			
+    			$('#codCondPgto').val("");
+    			$('#desCondPgto').val("");
+    			$('#desLancamento').val("");
+    			
+    			$('#people').val("");
+    			$('#indAvista').val("");
+    			$('#tpTitulo').val("");
+    		}
+    		
+    	});
+    	
+    	$("#dlg_confirm_update_btn").click(function (event) {
+    		let href = "/admin/payment_method_config/save";
+    		let id = $('#id').val() > 0 ? $('#id').val() : null;
+    		
+    		let payMmethodCfg = {
+				id: id,
+				sistema: $('#sistema').val(),
+				codigo: $('#codigo').val(),
+				codCondPgto: $('#codCondPgto').val(),
+				codPessoa: $('#people').val(),
+				desCondPgto: $('#desCondPgto').val(),
+				desLancamento: $('#desLancamento').val(),
+				indAvista: $('#indAvista').val(),
+				tipTitulo: $('#tpTitulo').val()
+    		};
+    		
+    		if (fieldsValidate(payMmethodCfg)) {
+		        jQuery.post(href, payMmethodCfg).done(function (data) {
+		        	if (data.id != null && data.id == id) {
+		        		feedback("O registro foi alterado com sucesso!", 'success', proceed);
+		        	} else if (data.id != null && data.id != id) {
+		        		feedback("O novo registro foi criado com sucesso!", 'success', proceed);
+		        	} else {
+		        		feedback("Ocorreu um erro no processamento, tente mais tarde ou contate o suporte!", 'danger', proceed);
+		        	}
+		        });
+    		}   
+        });	
+    	
+    	function fieldsValidate(pmc) {
+    		if (pmc.sistema == "") {
+    			feedback("<div>O campo <strong>Sistema</strong> é obrigatório!</div>", 'warning', proceed);
+    			return false;
+    		} else if (pmc.codigo == "") {
+    			feedback("<div>O campo <strong>Código</strong> é obrigatório!</div>", 'warning', proceed);
+    			return false;
+    		} else if (pmc.codCodPgto == "") {
+    			feedback("<div>O campo <strong>Condição de Pagamento</strong> é obrigatório!</div>", 'warning', proceed);
+    			return false;
+    		} else if (pmc.people == "") {
+    			feedback("<div>O campo <strong>Pessoa do Título</strong> é obrigatório!</div>", 'warning', proceed);
+    			return false;
+    		} else if (pmc.desLancamento == "") {
+    			feedback("<div>O campo <strong>Descrição do Lançamento</strong> é obrigatório!</div>", 'warning', proceed);
+    			return false;
+    		} else if (pmc.indAvista == "") {
+    			feedback("<div>O campo <strong>À Vista</strong> é obrigatório!</div>", 'warning', proceed);
+    			return false;
+    		} else if (pmc.tpTitulo == "") {
+    			feedback("<div>O campo <strong>Tipo de Título</strong> é obrigatório!</div>", 'warning', proceed);
+    			return false;
+    		}  
+    		return true;
+    	}
+    }); 
+</script>
+</html>

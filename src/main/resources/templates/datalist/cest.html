@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<head th:replace="~{layout/head :: head('Top Integrator')}" />
+
+<body>
+    <!-- Container -->
+    <div th:replace="layout/container :: container(~{ :: .content})">
+        <div class="content mx-4">
+
+           <!-- Variaveis -->
+           <input type="hidden" id="path" th:value="${path}">
+           <input type="hidden" id="filter" th:value="${filter}">
+           <input type="hidden" id="action" th:value="${action}">
+           <input type="hidden" id="msg" th:value="${msg}">
+            
+           <!-- Title -->
+           <div th:replace="~{comp/title :: title(title='Integração de Código Especificador da Substituição Tributária - CEST')}"></div>
+            
+           <!-- Feedback Messages  -->
+           <div th:replace="~{comp/feedback :: feedback}"></div>             
+          
+           <div class="container-fluid my-2">
+           <!-- Contant Area -->
+            
+               <!-- Grid -->  
+               <table border="1" class="table table-bordered table-striped table-responsive-md table-hover table-sm mt-3">
+        			<thead>
+        				<tr>
+        					<th>Código</th>
+        					<th>Descrição</th>
+        				</tr>
+        			</thead>
+        			<tbody>
+						<tr th:each="cest : ${listCests}">
+							<td th:text="${cest.codigo}"></td>	
+							<td th:text="${cest.descricao}"></td>						
+						</tr>        
+        			</tbody>
+        		</table>
+            
+               <!-- Navegator -->
+               <div th:replace="~{comp/navigator :: navigator}"></div>
+                
+               <!-- Actions / Progress Status -->
+               <div class="row me-auto mb-3 pb-5">
+                   <div class="btn-toolbar mb-2 mb-md-0 col-5">
+                       <button type="button" class="btn btn-primary me-1" id="starProcess">Atualizar Microvix</button>
+                   </div>
+                   <span id="status" class="col-1 mt-2 text-end">Progresso:</span>
+                   <div class="progress border float-end col-6 mt-1">
+                       <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                   </div>
+               </div>
+               
+           <!-- Contant Area - End -->    
+           </div>
+        </div>
+    </div>
+    
+    <th:block th:include="layout/script :: script"></th:block>
+</body>
+<script>
+    $( document ).ready(function() {
+    	
+        var codProduct = $("#codProduct").val();
+        var commercialArea = $("#commercialArea option:selected").val();
+        var action = $("#action").val();
+
+        // Lock the find form
+       lockFind(codProduct, commercialArea); 
+        
+        // Find
+        $("#find").click(function (event) {
+            event.preventDefault();
+            codProduct = $("#codProduct").val() ? $("#codProduct").val() : "none";
+            commercialArea = $("#commercialArea").val() == 0 ? "none" : $("#commercialArea").val();
+            
+            window.location.assign("/exp/barcode?cod_product="+codProduct+"&commercial_area="+commercialArea); 
+        });  
+        
+        // Send information to the web server Microvix 
+        $("#starProcess").click(function (event) {       
+            event.preventDefault();
+            $.get("/exp/barcode?action="+action+"&cod_product="+codProduct+"&commercial_area="+commercialArea); 
+            		
+            startStatusMonitor(resetFind);
+        });   
+    }); 
+    
+    function lockFind(codProduct, commercialArea) {
+    	commercialArea = commercialArea == "none" ? "" : commercialArea;            
+        if (codProduct || commercialArea) {
+            $("#codProduct").attr("disabled", true);
+            $("#commercialArea").attr("disabled", true);
+            $("#find").attr("disabled", true);
+        }
+    }
+    
+    function resetFind() {
+        if (codProduct || commercialArea) {     
+            $("#reset").attr("disabled", false);
+        } else {
+            $("#reset").attr("disabled", false);
+            $("#find").attr("disabled", false);
+        }
+        
+        $("#processar").attr("disabled", false);
+    }
+</script>
+</html>

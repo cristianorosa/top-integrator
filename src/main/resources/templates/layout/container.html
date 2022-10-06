@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="https://www.thymeleaf.org"
+    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    
+    <div th:fragment="container(content)" class="px-0">
+		<!-- Sidebar Menu -->
+        <nav th:replace="~{layout/sidebar :: sidebar}"></nav>
+        
+        <!-- Confirmation -->
+        <div th:replace="~{comp/confirmation :: confirmation(texto='Você tem certeza que deseja excluir este registro?')}"></div> 
+        
+        <!-- Page Navbar -->
+        <header th:replace="~{layout/header :: header('Top Internacional')}"></header>
+        
+		<!--Main Layout-->
+        <main class="col-md-9 col-lg-10">
+            <div class="content" th:replace="${content}"></div>
+        </main>
+        
+        <!-- Help -->
+        <div class="modal fade" data-backdrop="static" id="help" tabindex="-1" >
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Ajuda</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                [(${help})]
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>                   
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Help - End -->
+        
+    </div>
+
+</html>

@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="https://www.thymeleaf.org"
+    xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    
+    <head th:fragment="head(title)">
+    
+        <meta http-equiv=”Content-Type” content=”text/html; charset="utf-8"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content="Cristiano Rosa"></meta>
+       
+        <title>[[${title}]]</title>
+    
+        <!-- Brand icon -->
+        <link rel="icon" 
+              href="../static/img/logo_top.png" 
+              type="image/x-icon"></link>
+       
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" ></link>
+        <link rel="stylesheet" 
+              href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" 
+              integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" 
+              crossorigin="anonymous"></link>
+    
+        <!-- JQuery 3.6 - JavaScript Lib -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+                integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+                crossorigin="anonymous"></script>
+                
+        <!-- Componente DataPicker. site: https://bootstrap-datepicker.readthedocs.io/en/latest/index.html #-->
+        <script src="../static/js/bootstrap-datepicker.min.js"></script>
+        <script src="../static/js/bootstrap-datepicker.pt-BR.min.js"></script>        
+        
+        
+        <!--     Globals CSS -->
+        <link rel="stylesheet" href="../css/globals.css"></link>
+        
+        <link rel="stylesheet" href="../static/css/bootstrap-datepicker.min.css"></link>
+    
+    </head>
+</html>

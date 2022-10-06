@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="https://www.thymeleaf.org">
+
+<!-- Modal -->
+<div th:fragment="loader(title)" class="modal fade" id="loader" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">[(${title})]...</h5>
+            </div>
+            <div class="modal-body text-center">
+                <img src="../static/img/loader.gif" class="loader_ico" alt=""></img>
+
+                <p>
+                    <strong>Aguarde finalizar o processamento, por favor!</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</html>
